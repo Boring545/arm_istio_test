@@ -1,13 +1,19 @@
 import os
 import pandas as pd
 
+print("start processing test results")
 # 创建一个字典来统计每个 `a` 部分出现的次数
 count={}
 def process_txt_file(file_path,test_name):
+    data = []
     with open(file_path, 'r',errors='ignore') as file:
         lines=file.readlines()
-        if(len(lines)<6):
-            print("go test error or no tests\n","file_path:",file_path,"\ntest_name:",test_name)
+        if(len(lines)<5):
+            print("go test error \n","file_path:",lines[-1],"\ntest_name:",test_name)
+            status='N'
+            name=lines[-2].strip()+lines[-1].strip()
+            data.append([name,status,lines[0].strip()])
+            return data
         if(count[test_name]>1):
             name=lines[-2].strip()+lines[-1].strip()
         else:
@@ -24,7 +30,6 @@ def process_txt_file(file_path,test_name):
             elif lines[i].startswith("--- FAIL"):
                 flag=lines[i].strip()
         detail="'"+lines[0].strip()+"\n"+flag+"\n"+lines[-4].strip()
-        data = []
         data.append([name,status,detail])
         return data
 
@@ -60,12 +65,11 @@ def main(input_directory, output_file):
 
     # Write DataFrame to an Excel file
     df.to_excel(output_file, index=False)
-
+    print("success save test results to test_result.xlsx")
 if __name__ == "__main__":
-    input_directory = 'test_out'  # Change to your directory
+    input_directory = 'test'  # Change to your directory
     output_file = 'test_result.xlsx'
     main(input_directory, output_file)
-
 
 
 
