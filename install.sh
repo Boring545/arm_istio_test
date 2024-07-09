@@ -22,91 +22,55 @@ check_command() {
         log "Successfully executed: $1"
     fi
 }
-# 下载 Prometheus
-log "开始下载 Prometheus..."
-if [ ! -d "prometheus" ]; then
-    git clone https://github.com/prometheus/prometheus.git
-    check_command "git clone https://github.com/prometheus/prometheus.git"
+# 下载 istio-1.22.1
+log "开始下载 istio..."
+if [ ! -d "istio" ]; then
+    git clone --branch 1.22.1  https://github.com/istio/istio.git
+    check_command "git clone https://github.com/istio/istio.git"
     chmod +x -R .
 else
-    log "Prometheus 已经下载，跳过此步骤."
+    log "istio 已经下载，跳过此步骤."
 fi
 
 # 安装 Go 语言
-GO_URL="https://github.com/Huang-zic/go_golang.git"
+GO_URL="https://github.com/Boring545/go_golang.git"
 log "开始下载 Go 语言..."
 if [ ! -d "go_golang" ]; then
     git clone ${GO_URL} 
     check_command "git clone ${GO_URL}"
     chmod +x -R .
+    log "Go 安装完成."
 else
     log "Go 安装包已经下载，跳过此步骤."
 fi
 
 
-export PATH=$PATH:$PWD/go_golang/go/bin
-log "Go 安装完成."
-
 
 # 设置 GOROOT 和 GOPATH
 log "设置 Go 环境变量..."
-go env -w GOROOT=$PWD/go_golang/go
-check_command "go env -w GOROOT=$PWD/go_golang/go"
-go env -w GOPATH=$PWD/go_golang/golang 
-check_command "go env -w GOPATH=$PWD/go_golang/golang "
+export GOROOT=$PWD/go_golang/go
+export GOPATH=$PWD/go_golang/golang
+export PATH=$GOROOT/bin:$GOPATH/bin:$PATH 
+export GOSUMDB=sum.golang.org
+chmod +x -R ./go_golang
+go env -w GO111MODULE=on
+go env -w GOPROXY=https://mirrors.aliyun.com/goproxy/,direct
 log "Go 环境变量设置完成."
 
-# 安装 Node.js 和 npm
-log "开始安装 Node.js 和 npm..."
-if [ -z "$(command -v nvm)" ]; then
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-    check_command "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash"
-    export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-else
-    log "NVM 已经安装，跳过此步骤."
-fi
+#安装go-junit-report
+go install github.com/jstemmer/go-junit-report@latest
 
-log "安装 Node.js 版本 20..."
-nvm install 20
-check_command "nvm install 20"
-log "Node.js 安装完成."
 
-# 检查 Node.js 和 npm 版本
-NODE_VERSION=$(node -v)
-NPM_VERSION=$(npm -v)
-log "Node.js 版本: $NODE_VERSION"
-log "NPM 版本: $NPM_VERSION"
-
-# 处理可能的 nvm 命令未找到问题
-log "处理 nvm 命令未找到问题..."
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-log "NVM 已成功加载."
-
-# 添加 Go 代理
-log "添加 Go 代理..."
-go env -w GOPROXY=https://mirrors.aliyun.com/goproxy/
-check_command "go env -w GOPROXY=https://mirrors.aliyun.com/goproxy/"
-
-# 安装 goyacc 以解决 make test 报错问题
-log "安装 goyacc..."
-cd prometheus || error_exit "Failed to change directory to Prometheus."
-go install golang.org/x/tools/cmd/goyacc
-check_command "go install golang.org/x/tools/cmd/goyacc"
-log "goyacc 安装完成."
-
-cd ..
 #将脚本移动到指定目录中
-mv run_tests.sh ./prometheus
-mv performance_counter_920.sh ./prometheus
-mv count_test.py ./prometheus
-mv count_perf.py ./prometheus
+mv run_tests.sh ./istio
+mv performance_counter_920.sh ./istio
+mv count_test.py ./istio
+mv count_perf.py ./istio
 log "赋予执行权限"
 chmod +x -R .
 
-log "进入Prometheus目录"
-cd prometheus
+log "切换目录位置到istio文件下"
+cd istio
 
 log "进行test和perf测试"
 ./run_tests.sh
