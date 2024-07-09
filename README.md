@@ -23,16 +23,10 @@
    ```bash
    git clone https://github.com/Boring545/arm_istio_test.git
 
-1. **安装所需内容**
+2. **安装所需内容并测试、收集数据**
    ```bash
    chmod +x install.sh
+   #在install.sh中会执行run_tests.sh、count_test.py和count_perf.sh
    ./install.sh
 
-1. **开始测试**
-   ```bash
-   ./run_tests.sh
 
-1. **收集测试结果**
-   ```bash
-   ./count_test.py
-   ./count_perf.sh
