@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-
+print("start processing perf results")
 # 创建一个字典来统计每个 `a` 部分出现的次数
 count={}
 pn=['duration time','task clock','cpu-cycles','instructions','cache references','cache misses','branches','branch misses','L1 dcache loads',
@@ -29,7 +29,6 @@ def count_a_occurrences(directory):
         for file in files:
             if file.endswith('.txt'):
                 parts = file.split('-', 1)
-                print(parts)
                 if len(parts) == 2:
                     test_name = parts[0]
                     if test_name in count:
@@ -55,8 +54,8 @@ def main(input_directory, output_file):
 
     # Write DataFrame to an Excel file
     df.to_excel(output_file, index=False)
-
+    print("success save perf results to perf_result.xlsx")
 if __name__ == "__main__":
-    input_directory = 'perf_out'  # Change to your directory
+    input_directory = 'perf'  # Change to your directory
     output_file = 'perf_result.xlsx'
     main(input_directory, output_file)
