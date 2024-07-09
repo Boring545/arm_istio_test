@@ -22,7 +22,7 @@ find "$ROOT_DIR" -name '*_test.go' | while read -r test_file; do
     grep -oP 'func \K(Test\w*)' "$test_file" | while read -r test_func; do
         echo $test_func
         # 生成执行命令
-        cmd="go test -v -run ^$test_func$ $pkg"
+        cmd="go test -v -race -run ^$test_func$ $pkg"
         path=$(echo "$pkg" | sed 's:.*/::')
         file="$test_func-$path"
         $cmd > $file.txt 2>&1
