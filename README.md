@@ -25,6 +25,7 @@
 
 1. **安装所需内容**
    ```bash
+   chmod +x install.sh
    ./install.sh
 
 1. **开始测试**
