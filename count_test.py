@@ -62,7 +62,7 @@ def main(input_directory, output_file):
     df.to_excel(output_file, index=False)
 
 if __name__ == "__main__":
-    input_directory = 'test'  # Change to your directory
+    input_directory = 'test_out'  # Change to your directory
     output_file = 'test_result.xlsx'
     main(input_directory, output_file)
 
