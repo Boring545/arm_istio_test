@@ -71,6 +71,17 @@ chmod +x -R .
 
 log "切换目录位置到istio文件下"
 cd istio
+#下载build所需docker镜像
+docker pull registry.cn-hangzhou.aliyuncs.com/iloveyuanshen/build-tools:release-1.22-90c1573ac8a673ef69c7d0587232efa748243fac
+docker tag registry.cn-hangzhou.aliyuncs.com/iloveyuanshen/build-tools:release-1.22-90c1573ac8a673ef69c7d0587232efa748243fac gcr.io/istio-testing/build-tools:release-1.22-90c1573ac8a673ef69c7d0587232efa748243fac
+
+#初始化
+log "初始化构建"
+make init
+go mod download
+mkdir  backup
+mv Makefile.overrides.mk backup/
+make build
 
 log "进行test和perf测试"
 ./run_tests.sh
