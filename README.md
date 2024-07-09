@@ -29,4 +29,10 @@
    #在install.sh中会执行run_tests.sh、count_test.py和count_perf.sh
    ./install.sh
 
+## 结果存储
 
+1. **原始结果**
+   存储在test_out和perf_out两个文件夹下
+   
+3. **处理后结果**
+   存储在test_result.xlsx和perf_result.xlsx下
