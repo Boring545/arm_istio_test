@@ -1,4 +1,5 @@
 #!/bin/sh
+
 ROOT_DIR="."
 OUTPUT_DIR_PERF="perf_out"
 OUTPUT_DIR_TEST="test_out"
@@ -15,12 +16,13 @@ mkdir -p "$OUTPUT_DIR_TEST"
 find "$ROOT_DIR" -name '*_test.go' | while read -r test_file; do
     # 提取包名
     pkg=$(dirname "$test_file")
+    relative_pkg=$(realpath --relative-to="$ROOT_DIR" "$pkg")
 
     # 查找所有测试函数
     grep -oP 'func \K(Test\w*)' "$test_file" | while read -r test_func; do
         # 生成执行命令
         cmd="go test -v -race -run ^$test_func$ $pkg"
-        path=$(echo "$pkg" | sed 's:.*/::')
+        path="$relative_pkg"
         file="$test_func-$path"
         
         # 执行测试命令
@@ -35,4 +37,3 @@ find "$ROOT_DIR" -name '*_test.go' | while read -r test_file; do
         ./performance_counter_920.sh "$cmd" "$OUTPUT_DIR_PERF"
     done
 done
-
