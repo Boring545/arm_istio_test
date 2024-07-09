@@ -32,7 +32,7 @@
 ## 结果存储
 
 1. **原始结果**
-   存储在test_out和perf_out两个文件夹下
+   存储在test和perf两个文件夹下
    
 3. **处理后结果**
    存储在test_result.xlsx和perf_result.xlsx下
