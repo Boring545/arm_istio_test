@@ -21,11 +21,17 @@
 
 1. **克隆仓库**
    ```bash
-   git clone https://github.com/your-repo/istio.git
+   git clone https://github.com/Boring545/arm_istio_test.git
 
-具体执行流程为
-git clone
-./install.sh
-./run_tests.sh
-./count_test.py
-./count_perf.sh
+1. **安装所需内容**
+   ```bash
+   ./install.sh
+
+1. **开始测试**
+   ```bash
+   ./run_tests.sh
+
+1. **收集测试结果**
+   ```bash
+   ./count_test.py
+   ./count_perf.sh
